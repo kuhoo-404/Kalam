@@ -1,0 +1,76 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+ENV/
+env/
+
+# ML Models (TOO LARGE for GitHub)
+models/genre_classifier/
+models/embeddings/*.model
+models/embeddings/*.kv
+*.bin
+*.pt
+*.pth
+*.h5
+
+# HuggingFace Cache (HUGE)
+.cache/
+.huggingface/
+
+# Data files (too large)
+data/corpus/poetry_corpus.json
+data/corpus/poetry_corpus.csv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Django (for when you add it later)
+*.log
+db.sqlite3
+staticfiles/
+media/
+
+# Environment variables
+.env
+.env.local
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Pytest
+.pytest_cache/
+.coverage
+htmlcov/
