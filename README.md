@@ -158,7 +158,7 @@ python train_classifier.py
 python train_embeddings.py
 ```
 
-## Frontend (Coming Soon)
+
 
 ## 🧪 Testing
 ```bash
@@ -177,12 +177,7 @@ python src/models/suggestion_engine.py
 - HuggingFace for pre-trained models
 - CMU Pronouncing Dictionary for rhyme detection
 
-## 📊 Project Status
 
-- ML Pipeline Complete
--  Backend API (In Progress)
--  Frontend (Planned)
--  Deployment (Planned)
 
 ---
 
