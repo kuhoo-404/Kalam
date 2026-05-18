@@ -1,0 +1,151 @@
+.how-it-works {
+  padding: 120px 20px;
+  position: relative;
+}
+
+.how-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Header */
+.how-header {
+  text-align: center;
+  margin-bottom: 80px;
+}
+
+.how-eyebrow {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  letter-spacing: 4px;
+  color: var(--coffee);
+  font-weight: 600;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+}
+
+.how-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 5vw, 3.5rem);
+  font-weight: 700;
+  color: var(--ink-black);
+  margin-bottom: 20px;
+}
+
+.how-subtitle {
+  font-family: var(--font-body);
+  font-size: 1.25rem;
+  color: var(--soft-black);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Steps timeline */
+.steps-timeline {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 60px;
+  position: relative;
+}
+
+@media (min-width: 900px) {
+  .steps-timeline {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.step-card {
+  text-align: center;
+  position: relative;
+  padding: 40px 24px;
+  opacity: 0;
+}
+
+/* Step number */
+.step-number {
+  font-family: var(--font-display);
+  font-size: 4rem;
+  font-weight: 800;
+  opacity: 0.12;
+  line-height: 1;
+  margin-bottom: -20px;
+}
+
+/* Icon */
+.step-icon {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 28px;
+  transition: transform 0.4s ease;
+}
+
+.step-card:hover .step-icon {
+  transform: scale(1.1) rotate(5deg);
+}
+
+/* Title */
+.step-title {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--ink-black);
+  margin-bottom: 16px;
+}
+
+/* Description */
+.step-description {
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  color: var(--soft-black);
+  line-height: 1.7;
+}
+
+/* Connector line */
+.step-connector {
+  display: none;
+}
+
+@media (min-width: 900px) {
+  .step-connector {
+    display: block;
+    position: absolute;
+    top: 90px;
+    right: -60px;
+    width: 60px;
+    height: 3px;
+    opacity: 0.3;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .how-it-works {
+    padding: 80px 20px;
+  }
+  
+  .how-header {
+    margin-bottom: 60px;
+  }
+  
+  .steps-timeline {
+    gap: 50px;
+  }
+  
+  .step-number {
+    font-size: 3rem;
+  }
+  
+  .step-icon {
+    width: 75px;
+    height: 75px;
+  }
+  
+  .step-icon svg {
+    width: 32px;
+    height: 32px;
+  }
+}

@@ -1,0 +1,164 @@
+/* Create this new file for paper effects */
+
+/* Crumpled paper background */
+.paper-crumpled {
+  background-image: 
+    /* Coffee stain 1 */
+    radial-gradient(ellipse at 15% 20%, rgba(139, 115, 85, 0.08) 0%, transparent 40%),
+    /* Coffee stain 2 */
+    radial-gradient(ellipse at 85% 70%, rgba(160, 130, 109, 0.06) 0%, transparent 35%),
+    /* Wrinkle shadows */
+    linear-gradient(125deg, transparent 0%, rgba(44, 36, 22, 0.02) 30%, transparent 70%),
+    linear-gradient(65deg, transparent 0%, rgba(44, 36, 22, 0.015) 40%, transparent 80%),
+    /* Base gradient */
+    linear-gradient(180deg, var(--cream) 0%, var(--aged-cream) 100%);
+  
+  box-shadow: var(--shadow-inset);
+  position: relative;
+}
+
+/* Torn paper edge effect */
+.torn-edge-top {
+  position: relative;
+}
+
+.torn-edge-top::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background: var(--cream);
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 10'%3E%3Cpath d='M0,5 Q30,0 60,5 T120,5 Q150,8 180,5 T240,5 Q270,2 300,5 T360,5 Q390,7 420,5 T480,5 Q510,3 540,5 T600,5 Q630,6 660,5 T720,5 Q750,4 780,5 T840,5 Q870,8 900,5 T960,5 Q990,2 1020,5 T1080,5 Q1110,6 1140,5 T1200,5' fill='%23F5F1E8'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 10'%3E%3Cpath d='M0,5 Q30,0 60,5 T120,5 Q150,8 180,5 T240,5 Q270,2 300,5 T360,5 Q390,7 420,5 T480,5 Q510,3 540,5 T600,5 Q630,6 660,5 T720,5 Q750,4 780,5 T840,5 Q870,8 900,5 T960,5 Q990,2 1020,5 T1080,5 Q1110,6 1140,5 T1200,5' fill='%23F5F1E8'/%3E%3C/svg%3E");
+  -webkit-mask-size: cover;
+  mask-size: cover;
+}
+
+/* Paper card with 3D lift */
+.paper-card {
+  background: var(--cream);
+  border: 1px solid rgba(139, 115, 85, 0.2);
+  border-radius: 4px;
+  padding: 32px;
+  position: relative;
+  box-shadow: 
+    0 1px 2px rgba(0,0,0,0.05),
+    0 4px 12px rgba(44, 36, 22, 0.08),
+    0 16px 32px rgba(44, 36, 22, 0.04);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.paper-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: 
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.paper-card:hover {
+  transform: translateY(-8px) rotate(0.5deg);
+  box-shadow: 
+    0 2px 4px rgba(0,0,0,0.06),
+    0 8px 24px rgba(44, 36, 22, 0.12),
+    0 24px 48px rgba(44, 36, 22, 0.08);
+}
+
+/* Ink blot decoration */
+.ink-blot {
+  position: absolute;
+  background: radial-gradient(circle, rgba(44, 36, 22, 0.08) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(8px);
+  pointer-events: none;
+}
+
+/* Vintage button */
+.btn-vintage {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.05rem;
+  padding: 14px 36px;
+  border: none;
+  border-radius: 3px;
+  background: linear-gradient(135deg, var(--coffee) 0%, var(--dark-coffee) 100%);
+  color: white;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 
+    0 2px 8px rgba(107, 88, 66, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  letter-spacing: 0.3px;
+}
+
+.btn-vintage::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  transition: left 0.5s ease;
+}
+
+.btn-vintage:hover::before {
+  left: 100%;
+}
+
+.btn-vintage:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 4px 16px rgba(107, 88, 66, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.btn-vintage:active {
+  transform: translateY(0);
+}
+
+/* Outline button (vintage) */
+.btn-outline-vintage {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.05rem;
+  padding: 12px 32px;
+  border: 2px solid var(--coffee);
+  border-radius: 3px;
+  background: transparent;
+  color: var(--coffee);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 0.3px;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-outline-vintage::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  background: var(--coffee);
+  transition: width 0.4s ease;
+  z-index: -1;
+}
+
+.btn-outline-vintage:hover::before {
+  width: 100%;
+}
+
+.btn-outline-vintage:hover {
+  color: white;
+  border-color: var(--coffee);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(139, 115, 85, 0.25);
+}

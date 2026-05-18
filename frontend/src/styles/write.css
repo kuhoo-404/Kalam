@@ -1,0 +1,419 @@
+.write-page {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 300px 1fr 320px;
+  gap: 0;
+  background: var(--aged-cream);
+  padding: 0;
+}
+
+/* Left Panel - Suggestions */
+.suggestions-panel {
+  background: var(--cream);
+  border-right: 1px solid rgba(139, 115, 85, 0.15);
+  padding: 24px;
+  overflow-y: auto;
+  max-height: 100vh;
+  position: sticky;
+  top: 0;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  color: var(--coffee);
+}
+
+.panel-header h3 {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  letter-spacing: 2px;
+  font-weight: 600;
+}
+
+/* Search box */
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.word-input {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  padding: 10px 14px;
+  border: 2px solid var(--dark-cream);
+  border-radius: 4px;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  background: white;
+  color: var(--ink-black);
+  box-sizing: border-box;
+}
+
+.word-input:focus {
+  outline: none;
+  border-color: var(--coffee);
+}
+
+.btn-find {
+  flex-shrink: 0;
+  min-width: fit-content;
+  padding: 10px 16px;
+  background: var(--coffee);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.btn-find:hover {
+  background: var(--dark-coffee);
+  transform: translateY(-2px);
+}
+
+/* Tabs */
+.suggestion-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid var(--dark-cream);
+}
+
+.tab {
+  flex: 1;
+  padding: 10px;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--soft-black);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: -2px;
+  transition: all 0.3s ease;
+}
+
+.tab.active {
+  color: var(--coffee);
+  border-bottom-color: var(--coffee);
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.empty-icon {
+  color: var(--dark-cream);
+  margin-bottom: 16px;
+}
+
+.empty-text {
+  font-family: var(--font-body);
+  color: var(--soft-black);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+.empty-hint {
+  font-family: var(--font-body);
+  color: var(--faded-ink);
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
+/* Suggestions list */
+.suggestions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.suggestion-item {
+  padding: 12px;
+  background: white;
+  border: 1px solid var(--dark-cream);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.suggestion-item:hover {
+  border-color: var(--coffee);
+  transform: translateX(4px);
+  box-shadow: 0 2px 8px rgba(139, 115, 85, 0.1);
+}
+
+.sugg-word {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--ink-black);
+  margin-bottom: 4px;
+}
+
+.sugg-reason {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--faded-ink);
+}
+
+/* Center - Writing Area */
+.writing-main {
+  padding: 24px;
+  overflow-y: auto;
+  max-height: 100vh;
+}
+
+/* Genre selector */
+.genre-selector-wrapper {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.genre-selector {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  border: 2px solid;
+  border-radius: 6px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 280px;
+}
+
+.genre-selector:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.genre-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  color: white;
+  font-size: 0.9rem;
+}
+
+/* Genre dropdown menu */
+.genre-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 8px;
+  width: 280px;
+  padding: 8px;
+  background: white;
+  border: 1px solid var(--dark-cream);
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  z-index: 100;
+  animation: fadeInUp 0.3s ease-out;
+}
+
+.genre-option {
+  width: 100%;
+  padding: 12px 16px;
+  text-align: left;
+  border: none;
+  border-radius: 4px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--ink-black);
+  cursor: pointer;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.2s ease;
+}
+
+.genre-option:hover {
+  transform: translateX(4px);
+}
+
+/* Poem editor */
+.poem-editor {
+  min-height: calc(100vh - 160px);
+  border: 2px solid;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.editor-header {
+  padding: 16px 24px;
+  border-bottom: 2px solid;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255,255,255,0.5);
+}
+
+.genre-indicator {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+}
+
+.editor-stats {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--soft-black);
+  display: flex;
+  gap: 12px;
+}
+
+.poem-textarea {
+  width: 100%;
+  min-height: calc(100vh - 240px);
+  padding: 32px;
+  border: none;
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: 1.2rem;
+  line-height: 2;
+  color: var(--ink-black);
+  resize: none;
+  box-sizing: border-box;
+}
+
+.poem-textarea:focus {
+  outline: none;
+}
+
+.poem-textarea::placeholder {
+  color: rgba(0,0,0,0.3);
+  font-style: italic;
+}
+
+/* Right Panel - Sentiment */
+.sentiment-panel {
+  background: var(--cream);
+  border-left: 1px solid rgba(139, 115, 85, 0.15);
+  padding: 24px;
+  overflow-y: auto;
+  max-height: 100vh;
+  position: sticky;
+  top: 0;
+}
+
+.sentiment-display {
+  text-align: center;
+  margin: 24px 0;
+}
+
+.sentiment-emoji {
+  font-size: 4rem;
+  margin-bottom: 12px;
+}
+
+.sentiment-label {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--ink-black);
+  margin-bottom: 8px;
+}
+
+.sentiment-score {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--coffee);
+}
+
+.sentiment-score span {
+  font-size: 1rem;
+  color: var(--faded-ink);
+}
+
+/* Sentiment meter */
+.sentiment-meter {
+  margin: 32px 0;
+}
+
+.meter-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: var(--faded-ink);
+}
+
+.meter-bar {
+  height: 8px;
+  background: var(--dark-cream);
+  border-radius: 4px;
+  position: relative;
+  margin-bottom: 12px;
+}
+
+.meter-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #B85450 0%, #FFD700 100%);
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+.meter-indicator {
+  position: absolute;
+  top: -4px;
+  width: 16px;
+  height: 16px;
+  background: white;
+  border: 3px solid var(--coffee);
+  border-radius: 50%;
+  transform: translateX(-50%);
+  transition: left 0.5s ease;
+}
+
+.meter-emojis {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.2rem;
+}
+
+.sentiment-hint {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--faded-ink);
+  font-style: italic;
+  text-align: center;
+  line-height: 1.6;
+  margin-top: 24px;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .write-page {
+    grid-template-columns: 1fr;
+  }
+
+  .suggestions-panel,
+  .sentiment-panel {
+    display: none;
+  }
+}

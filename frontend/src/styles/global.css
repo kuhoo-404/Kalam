@@ -1,0 +1,232 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap');
+
+:root {
+  /* Colors - Vintage Paper Palette */
+  --cream: #F5F1E8;
+  --aged-cream: #E8DCC4;
+  --dark-cream: #DDD0B8;
+  --ink-black: #2C2416;
+  --soft-black: #3D3426;
+  --coffee-brown: #8B7355;
+  --dark-brown: #6B5842;
+  --gold: #C9A66B;
+  --light-gold: #D4B07A;
+  
+  /* Fonts */
+  --font-display: 'Playfair Display', serif;
+  --font-body: 'Crimson Text', serif;
+  
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 15px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.2);
+  --shadow-paper: 0 4px 15px rgba(139, 115, 85, 0.2);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--cream);
+  color: var(--ink-black);
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+/* Paper texture background */
+.paper-texture {
+  background-image: 
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"),
+    linear-gradient(180deg, var(--cream) 0%, var(--aged-cream) 100%);
+  
+  box-shadow: inset 0 0 50px rgba(139, 115, 85, 0.08);
+}
+
+/* Card with paper effect */
+.card-paper {
+  background: var(--cream);
+  border: 2px solid var(--aged-cream);
+  border-radius: 8px;
+  box-shadow: var(--shadow-paper);
+  position: relative;
+  overflow: hidden;
+}
+
+.card-paper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+/* Vintage button */
+.btn-vintage {
+  font-family: var(--font-display);
+  background: linear-gradient(135deg, var(--coffee-brown) 0%, var(--dark-brown) 100%);
+  color: white;
+  border: none;
+  padding: 16px 48px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(139, 115, 85, 0.3);
+  letter-spacing: 0.5px;
+}
+
+.btn-vintage:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 25px rgba(139, 115, 85, 0.4);
+}
+
+.btn-vintage:active {
+  transform: translateY(-1px);
+}
+
+/* Secondary button */
+.btn-outline {
+  font-family: var(--font-display);
+  background: transparent;
+  color: var(--coffee-brown);
+  border: 2px solid var(--coffee-brown);
+  padding: 14px 40px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-outline:hover {
+  background: var(--coffee-brown);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(139, 115, 85, 0.3);
+}
+
+/* Container */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Smooth scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Selection */
+::selection {
+  background: var(--gold);
+  color: white;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--aged-cream);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--coffee-brown);
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--dark-brown);
+}
+
+/* Vintage depth */
+.paper-aged {
+  position: relative;
+  overflow: hidden;
+}
+
+.paper-aged::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(120,90,40,0.08), transparent 30%),
+    radial-gradient(circle at 80% 70%, rgba(80,50,20,0.06), transparent 35%),
+    radial-gradient(circle at 50% 90%, rgba(120,80,50,0.05), transparent 25%);
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+.paper-aged::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(80, 60, 40, 0.05);
+  box-shadow:
+    inset 0 0 80px rgba(80,50,30,0.08),
+    inset 0 0 20px rgba(0,0,0,0.05);
+  pointer-events: none;
+}
+
+/* Coffee stain */
+.coffee-stain {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  border: 8px solid rgba(111, 78, 55, 0.08);
+  border-radius: 50%;
+  top: 12%;
+  right: 8%;
+  transform: rotate(-12deg);
+  pointer-events: none;
+}
+
+/* Torn paper edge */
+.torn-edge {
+  position: relative;
+}
+
+.torn-edge::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 24px;
+  background:
+    radial-gradient(circle at 10px -4px, transparent 12px, var(--cream) 13px),
+    radial-gradient(circle at 40px -6px, transparent 12px, var(--cream) 13px),
+    radial-gradient(circle at 70px -5px, transparent 11px, var(--cream) 12px);
+  background-size: 100px 24px;
+}
+
+/* 3D card hover */
+.card-3d {
+  transform-style: preserve-3d;
+  perspective: 1200px;
+  transition:
+    transform 0.45s ease,
+    box-shadow 0.45s ease;
+}
+
+.card-3d:hover {
+  transform:
+    rotateX(-5deg)
+}

@@ -1,0 +1,169 @@
+/* Ink spread animation */
+@keyframes inkSpread {
+  0% {
+    clip-path: circle(0% at 50% 50%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    clip-path: circle(150% at 50% 50%);
+    opacity: 1;
+  }
+}
+
+.ink-spread-enter {
+  animation: inkSpread 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Page turn animation */
+@keyframes pageTurn {
+  0% {
+    transform: perspective(1200px) rotateY(-15deg);
+    opacity: 0;
+  }
+  100% {
+    transform: perspective(1200px) rotateY(0deg);
+    opacity: 1;
+  }
+}
+
+.page-turn {
+  animation: pageTurn 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: left center;
+}
+
+/* Fade in from below */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+}
+
+/* Staggered fade in */
+.fade-in-up-1 { animation-delay: 0.1s; }
+.fade-in-up-2 { animation-delay: 0.2s; }
+.fade-in-up-3 { animation-delay: 0.3s; }
+.fade-in-up-4 { animation-delay: 0.4s; }
+.fade-in-up-5 { animation-delay: 0.5s; }
+
+/* Float animation */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+.float {
+  animation: float 4s ease-in-out infinite;
+}
+
+/* Gentle pulse */
+@keyframes gentlePulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(0.98);
+  }
+}
+
+.gentle-pulse {
+  animation: gentlePulse 3s ease-in-out infinite;
+}
+
+/* Paper flutter (for suggestion cards) */
+@keyframes paperFlutter {
+  0% {
+    transform: translateX(300px) rotate(15deg);
+    opacity: 0;
+  }
+  60% {
+    transform: translateX(-10px) rotate(-2deg);
+  }
+  80% {
+    transform: translateX(5px) rotate(1deg);
+  }
+  100% {
+    transform: translateX(0) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+.flutter-in {
+  animation: paperFlutter 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Typewriter effect */
+@keyframes typewriter {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+.typewriter {
+  overflow: hidden;
+  border-right: 2px solid var(--ink-black);
+  white-space: nowrap;
+  animation: 
+    typewriter 3s steps(40) 1s forwards,
+    blink 0.75s step-end infinite;
+}
+
+@keyframes blink {
+  50% {
+    border-color: transparent;
+  }
+}
+
+/* Wax seal stamp */
+@keyframes stampDown {
+  0% {
+    transform: scale(2) translateY(-100px);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(0.9) translateY(0);
+  }
+  80% {
+    transform: scale(1.05) translateY(-5px);
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+.stamp-down {
+  animation: stampDown 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Scroll reveal */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.scroll-reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
