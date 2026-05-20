@@ -1,17 +1,27 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Feather, Menu, X } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Feather, Menu, X, LogIn, LogOut } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const isLoggedIn = !!localStorage.getItem('access_token');
+
+  const handleLogout = () => {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    navigate('/login');
+    setIsOpen(false);
+  };
 
   const navLinks = [
     { name: 'Home',      path: '/' },
     { name: 'Templates', path: '/templates' },
     { name: 'Write',     path: '/write' },
-    { name: 'My Poems',  path: '/saved' },   // ← new
+    { name: 'My Poems',  path: '/saved' },
     { name: 'About',     path: '/about' },
   ];
 
@@ -40,11 +50,26 @@ const Navbar = () => {
               {link.name}
             </Link>
           ))}
-          <Link to="/write">
-            <button className="btn-vintage" style={styles.ctaButton}>
-              Start Writing
+
+          {isLoggedIn ? (
+            <button
+              className="btn-vintage"
+              style={styles.ctaButton}
+              onClick={handleLogout}
+            >
+              <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <LogOut size={16} /> Logout
+              </span>
             </button>
-          </Link>
+          ) : (
+            <Link to="/login">
+              <button className="btn-vintage" style={styles.ctaButton}>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <LogIn size={16} /> Start Writing
+                </span>
+              </button>
+            </Link>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
@@ -75,14 +100,29 @@ const Navbar = () => {
                 {link.name}
               </Link>
             ))}
-            <Link to="/write" onClick={() => setIsOpen(false)}>
+
+            {isLoggedIn ? (
               <button
                 className="btn-vintage"
                 style={{ ...styles.ctaButton, width: '100%', marginTop: '16px' }}
+                onClick={handleLogout}
               >
-                Start Writing
+                <span style={{ display: 'flex', alignItems: 'center', gap: '6px', justifyContent: 'center' }}>
+                  <LogOut size={16} /> Logout
+                </span>
               </button>
-            </Link>
+            ) : (
+              <Link to="/login" onClick={() => setIsOpen(false)}>
+                <button
+                  className="btn-vintage"
+                  style={{ ...styles.ctaButton, width: '100%', marginTop: '16px' }}
+                >
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '6px', justifyContent: 'center' }}>
+                    <LogIn size={16} /> Start Writing
+                  </span>
+                </button>
+              </Link>
+            )}
           </motion.div>
         )}
       </AnimatePresence>
@@ -142,6 +182,7 @@ const styles = {
   ctaButton: {
     padding: '12px 28px',
     fontSize: '1rem',
+    cursor: 'pointer',
   },
   menuButton: {
     display: 'none',
