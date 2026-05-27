@@ -48,9 +48,21 @@ const GENRES = [
   },
 ];
 
+// Two-way fuzzy match — handles "Philosophical & Reflective" ↔ "Philosophical"
+// and "Hope&Joy" ↔ "Hope & Joy"
+const matchGenre = (detectedLabel) => {
+  if (!detectedLabel) return null;
+  const d = detectedLabel.toLowerCase().replace(/[^a-z]/g, '');
+  return GENRES.find(g => {
+    const gl = g.label.toLowerCase().replace(/[^a-z]/g, '');
+    return gl.includes(d) || d.includes(gl);
+  }) || null;
+};
+
 const WritingEditor = ({ onPoemChange, detectedGenre, initialGenre, initialPoem, poemId }) => {
-  const [poem, setPoem]               = useState(initialPoem || '');
+  const [poem, setPoem]                   = useState(initialPoem || '');
   const [selectedGenre, setSelectedGenre] = useState(
+    // Seed from initialGenre (e.g. coming from template card)
     GENRES.find(g => g.label.toLowerCase() === (initialGenre || '').toLowerCase()) || null
   );
   const [wordCount, setWordCount]     = useState(0);
@@ -61,16 +73,29 @@ const WritingEditor = ({ onPoemChange, detectedGenre, initialGenre, initialPoem,
   const [particles, setParticles]     = useState([]);
   const [saveSuccess, setSaveSuccess] = useState(false);
 
-  const { savePoem }      = usePoemStorage();
-  const textareaRef       = useRef(null);
-  const saveTimerRef      = useRef(null);
-  const currentPoemId     = useRef(poemId || null);
+  const { savePoem }  = usePoemStorage();
+  const textareaRef   = useRef(null);
+  const saveTimerRef  = useRef(null);
+  const currentPoemId = useRef(poemId || null);
+  // Tracks whether user has manually clicked a pill
+  const userPickedRef = useRef(false);
 
-  const activeGenre = detectedGenre
-    ? GENRES.find(g => g.label.toLowerCase().includes(detectedGenre.toLowerCase())) || GENRES[0]
-    : selectedGenre || GENRES[0];
+  // ── activeGenre: manual pick wins, then AI detection, then default ──
+  const detectedGenreObj = matchGenre(detectedGenre);
+  const activeGenre = selectedGenre || detectedGenreObj || GENRES[0];
 
-  // ── Auto-save indicator (not real save — just "unsaved changes" dot) ──
+  // ── AI detection auto-updates the pill (unless user manually picked) ──
+  useEffect(() => {
+    if (detectedGenre) {
+      const matched = matchGenre(detectedGenre);
+      // Only auto-update if user hasn't manually chosen
+      if (matched && !userPickedRef.current) {
+        setSelectedGenre(matched);
+      }
+    }
+  }, [detectedGenre]);
+
+  // ── Auto-save indicator ────────────────────────────────────────────
   useEffect(() => {
     const lines = poem ? poem.split('\n') : [];
     const words = poem.trim() ? poem.trim().split(/\s+/).length : 0;
@@ -88,20 +113,31 @@ const WritingEditor = ({ onPoemChange, detectedGenre, initialGenre, initialPoem,
     return () => clearTimeout(saveTimerRef.current);
   }, [poem]);
 
-  // ── Handlers ──────────────────────────────────────────────────────────
-  const handleSave = () => {
+  // ── Handlers ──────────────────────────────────────────────────────
+  const handleGenreClick = (g) => {
+    userPickedRef.current = true; // lock manual control
+    setSelectedGenre(g);
+  };
+
+  const handleSave = async () => {
     if (!poem.trim()) return;
-    const saved = savePoem({
-      id: currentPoemId.current,
-      title: null,
-      content: poem,
-      genre: activeGenre.label,
-      wordCount,
-      lineCount,
-    });
-    currentPoemId.current = saved.id;
-    setSaveSuccess(true);
-    setTimeout(() => setSaveSuccess(false), 2200);
+    try {
+      const saved = await savePoem({
+        id: currentPoemId.current,
+        title: null,
+        content: poem,
+        genre: activeGenre.label,
+        wordCount,
+        lineCount,
+      });
+      if (saved) {
+        currentPoemId.current = saved.id;
+        setSaveSuccess(true);
+        setTimeout(() => setSaveSuccess(false), 2200);
+      }
+    } catch (err) {
+      console.error('Save failed:', err);
+    }
   };
 
   const createInkEffect = () => {
@@ -135,6 +171,9 @@ const WritingEditor = ({ onPoemChange, detectedGenre, initialGenre, initialPoem,
     if (poem && window.confirm('Clear the page?')) {
       setPoem('');
       setInkBlots([]);
+      // Reset genre lock so AI detection works again on fresh poem
+      userPickedRef.current = false;
+      setSelectedGenre(null);
     }
   };
 
@@ -148,7 +187,7 @@ const WritingEditor = ({ onPoemChange, detectedGenre, initialGenre, initialPoem,
     URL.revokeObjectURL(url);
   };
 
-  // ── Render ────────────────────────────────────────────────────────────
+  // ── Render ────────────────────────────────────────────────────────
   return (
     <div style={styles.wrapper}>
 
@@ -164,13 +203,13 @@ const WritingEditor = ({ onPoemChange, detectedGenre, initialGenre, initialPoem,
               key={g.id}
               whileHover={{ y: -2, scale: 1.04 }}
               whileTap={{ scale: 0.98 }}
-              onClick={() => setSelectedGenre(g)}
+              onClick={() => handleGenreClick(g)}
               style={{
                 ...styles.genrePill,
-                background:   activeGenre?.id === g.id ? `${g.color}22` : 'rgba(255,255,255,0.03)',
-                borderColor:  activeGenre?.id === g.id ? g.color : 'rgba(255,255,255,0.08)',
-                color:        activeGenre?.id === g.id ? g.color : 'rgba(255,255,255,0.6)',
-                boxShadow:    activeGenre?.id === g.id ? `0 0 25px ${g.glow}` : 'none',
+                background:  activeGenre?.id === g.id ? `${g.color}22` : 'rgba(92,74,52,0.06)',
+                borderColor: activeGenre?.id === g.id ? g.color : 'rgba(92,74,52,0.3)',
+                color:       activeGenre?.id === g.id ? g.color : '#5C4A34',
+                boxShadow:   activeGenre?.id === g.id ? `0 0 25px ${g.glow}` : 'none',
               }}
             >
               {g.label}
@@ -255,7 +294,6 @@ const WritingEditor = ({ onPoemChange, detectedGenre, initialGenre, initialPoem,
               )}
             </AnimatePresence>
 
-            {/* Save button */}
             <button
               onClick={handleSave}
               disabled={!poem.trim()}
@@ -286,7 +324,6 @@ const WritingEditor = ({ onPoemChange, detectedGenre, initialGenre, initialPoem,
 
         {/* Writing area */}
         <div style={styles.writingArea}>
-          {/* Ruled lines */}
           <div style={styles.ruledLines}>
             {Array.from({ length: 28 }).map((_, i) => (
               <div
@@ -295,11 +332,7 @@ const WritingEditor = ({ onPoemChange, detectedGenre, initialGenre, initialPoem,
               />
             ))}
           </div>
-
-          {/* Margin line */}
           <div style={{ ...styles.marginLine, background: `${activeGenre.color}55` }} />
-
-          {/* Textarea */}
           <textarea
             ref={textareaRef}
             value={poem}
@@ -333,8 +366,8 @@ const WritingEditor = ({ onPoemChange, detectedGenre, initialGenre, initialPoem,
 };
 
 const styles = {
-  wrapper: { display: 'flex', flexDirection: 'column', gap: '20px', width: '100%' },
-  genreRow: { display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' },
+  wrapper:    { display: 'flex', flexDirection: 'column', gap: '20px', width: '100%' },
+  genreRow:   { display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' },
   genreLabel: {
     fontFamily: 'var(--font-body)', fontSize: '0.78rem', letterSpacing: '2px',
     color: 'var(--coffee-brown)', fontWeight: 700, display: 'flex', alignItems: 'center',
@@ -355,7 +388,7 @@ const styles = {
     position: 'absolute', width: '500px', height: '500px', borderRadius: '50%',
     filter: 'blur(120px)', top: '-120px', right: '-120px', opacity: 0.45, pointerEvents: 'none',
   },
-  filmGrain: { position: 'absolute', inset: 0, pointerEvents: 'none', opacity: 0.45 },
+  filmGrain:  { position: 'absolute', inset: 0, pointerEvents: 'none', opacity: 0.45 },
   toolbar: {
     display: 'flex', justifyContent: 'space-between', alignItems: 'center',
     padding: '18px 26px', borderBottom: '1px solid rgba(255,255,255,0.06)',
@@ -386,9 +419,9 @@ const styles = {
     fontFamily: 'var(--font-display)', fontSize: '1.18rem', lineHeight: '36px', letterSpacing: '0.3px',
   },
   footer: { padding: '16px 28px', borderTop: '1px solid rgba(255,255,255,0.06)', backdropFilter: 'blur(10px)', zIndex: 5 },
-  stats: { display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' },
-  stat: { fontFamily: 'var(--font-body)', fontSize: '0.78rem', color: 'rgba(255,255,255,0.45)', letterSpacing: '0.4px' },
-  dot:  { color: 'rgba(255,255,255,0.18)' },
+  stats:  { display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' },
+  stat:   { fontFamily: 'var(--font-body)', fontSize: '0.78rem', color: 'rgba(255,255,255,0.45)', letterSpacing: '0.4px' },
+  dot:    { color: 'rgba(255,255,255,0.18)' },
 };
 
 export default WritingEditor;

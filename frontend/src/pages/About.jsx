@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { PenTool, Brain, Sparkles, Feather } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
@@ -45,6 +45,13 @@ const cardVariants = {
 };
 
 const About = () => {
+  const navigate = useNavigate();
+
+  const handleStartWriting = () => {
+    const token = localStorage.getItem('access_token');
+    navigate(token ? '/write' : '/login');
+  };
+
   return (
     <>
       <Navbar />
@@ -70,12 +77,10 @@ const About = () => {
                 into a creative space that feels alive.
               </p>
               <div style={styles.heroBtns}>
-                <Link to="/write">
-                  <button style={styles.primaryBtn}>
-                    <Feather size={15} style={{ marginRight: 8 }} />
-                    Start Writing
-                  </button>
-                </Link>
+                <button style={styles.primaryBtn} onClick={handleStartWriting}>
+                  <Feather size={15} style={{ marginRight: 8 }} />
+                  Start Writing
+                </button>
                 <Link to="/templates">
                   <button style={styles.outlineBtn}>Browse Templates</button>
                 </Link>
@@ -143,8 +148,6 @@ const styles = {
     margin: '0 auto',
     padding: '0 24px',
   },
-
-  /* Hero */
   heroSection: {
     padding: '110px 0 90px',
   },
@@ -207,8 +210,6 @@ const styles = {
     padding: '12px 28px',
     cursor: 'pointer',
   },
-
-  /* Steps */
   stepsSection: {
     padding: '80px 0 120px',
     background: 'rgba(139,115,85,0.04)',

@@ -25,7 +25,9 @@ class PoetrySuggestionEngine:
         print("Initializing Poetry Suggestion Engine...")
         
         # Load word embeddings
-        embeddings_path = '../../models/embeddings/poetry_embeddings.kv'
+        # Dynamic path — works from anywhere
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        embeddings_path = os.path.join(current_dir, '..', '..', 'models', 'embeddings', 'poetry_embeddings.kv')
         print(f"Loading embeddings from {embeddings_path}...")
         self.embeddings = KeyedVectors.load(embeddings_path, mmap='r')
         print(f"✓ Loaded {len(self.embeddings)} word vectors")

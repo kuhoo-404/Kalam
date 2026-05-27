@@ -43,5 +43,7 @@ export const getPoem = (id) => api.get(`/api/poems/${id}/`);
 export const createPoem = (data) => api.post('/api/poems/', data);
 export const updatePoem = (id, data) => api.put(`/api/poems/${id}/`, data);
 export const deletePoem = (id) => api.delete(`/api/poems/${id}/`);
+export const analyzePoem = (text) => api.post('/api/analyze/', { text });
+export const getSuggestions = (word, poem_text) => api.post('/api/suggest/complete/', { word, poem_text });
 
 export default api;

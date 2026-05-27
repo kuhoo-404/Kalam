@@ -61,6 +61,10 @@ Thumbs.db
 db.sqlite3
 staticfiles/
 media/
+.env
+__pycache__/
+*.pyc
+
 
 # Environment variables
 .env

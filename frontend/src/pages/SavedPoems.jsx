@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Feather, Trash2, BookOpen, Clock, Edit3, Search, FileText } from 'lucide-react';
+import { Feather, Trash2, Clock, Edit3, Search, FileText } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import usePoemStorage from '../utilis/usePoemStorage';
 
-// Genre accent colors — must match WritingEditor GENRES
 const GENRE_COLORS = {
   'Romantic':       { color: '#D96C8A', bg: 'linear-gradient(135deg, #2B0D18 0%, #5E1830 100%)', glow: 'rgba(217,108,138,0.20)' },
   'Misery':         { color: '#6E7FAE', bg: 'linear-gradient(135deg, #0B1020 0%, #1B2745 100%)', glow: 'rgba(110,127,174,0.18)' },
@@ -38,21 +37,15 @@ const PoemCard = ({ poem, onOpen, onDelete, index }) => {
       whileHover={{ y: -6, transition: { duration: 0.2 } }}
       style={{ ...cardStyles.card, background: style.bg, boxShadow: `0 16px 48px ${style.glow}` }}
     >
-      {/* Glow orb */}
       <div style={{ ...cardStyles.glow, background: style.glow }} />
 
-      {/* Genre pill */}
       <div style={{ ...cardStyles.genrePill, color: style.color, border: `1px solid ${style.color}40` }}>
         {poem.genre || 'Unknown'}
       </div>
 
-      {/* Title */}
       <h3 style={cardStyles.title}>{poem.title}</h3>
-
-      {/* Preview */}
       <p style={cardStyles.preview}>{preview}</p>
 
-      {/* Meta */}
       <div style={cardStyles.meta}>
         <div style={cardStyles.metaItem}>
           <Clock size={11} color="rgba(255,255,255,0.35)" />
@@ -64,7 +57,6 @@ const PoemCard = ({ poem, onOpen, onDelete, index }) => {
         </div>
       </div>
 
-      {/* Actions */}
       <div style={cardStyles.actions}>
         <button
           onClick={() => onOpen(poem)}
@@ -90,9 +82,15 @@ const PoemCard = ({ poem, onOpen, onDelete, index }) => {
   );
 };
 
-// ── Empty state ───────────────────────────────────────────────
+// ── Empty State ───────────────────────────────────────────────
 const EmptyState = () => {
   const navigate = useNavigate();
+
+  const handleStartWriting = () => {
+    const token = localStorage.getItem('access_token');
+    navigate(token ? '/write' : '/login');
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -106,10 +104,7 @@ const EmptyState = () => {
       <p style={pageStyles.emptySubtitle}>
         Start writing and save your first poem. It will appear here.
       </p>
-      <button
-        onClick={() => navigate('/write')}
-        style={pageStyles.emptyBtn}
-      >
+      <button onClick={handleStartWriting} style={pageStyles.emptyBtn}>
         <Feather size={15} style={{ marginRight: 8 }} />
         Start Writing
       </button>
@@ -168,7 +163,6 @@ const SavedPoems = () => {
               transition={{ delay: 0.15, duration: 0.5 }}
               style={pageStyles.controls}
             >
-              {/* Search */}
               <div style={pageStyles.searchWrapper}>
                 <Search size={15} color="#8B7355" style={{ flexShrink: 0 }} />
                 <input
@@ -180,7 +174,6 @@ const SavedPoems = () => {
                 />
               </div>
 
-              {/* Genre filter */}
               <div style={pageStyles.filterRow}>
                 {genres.map(g => (
                   <button
@@ -243,7 +236,7 @@ const SavedPoems = () => {
   );
 };
 
-// ── Card styles ───────────────────────────────────────────────
+// ── Card Styles ───────────────────────────────────────────────
 const cardStyles = {
   card: {
     position: 'relative',
@@ -384,7 +377,7 @@ const cardStyles = {
   },
 };
 
-// ── Page styles ───────────────────────────────────────────────
+// ── Page Styles ───────────────────────────────────────────────
 const pageStyles = {
   page: {
     minHeight: '100vh',

@@ -1,14 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Feather, ArrowDown } from 'lucide-react';
 import '../styles/hero.css';
 
 const Hero = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setIsVisible(true);
   }, []);
+
+  const handleStartWriting = () => {
+    const token = localStorage.getItem('access_token');
+    navigate(token ? '/write' : '/login');
+  };
 
   return (
     <section className="hero paper-crumpled">
@@ -37,12 +43,13 @@ const Hero = () => {
 
         {/* CTA Buttons */}
         <div className={`hero-buttons ${isVisible ? 'fade-in-up-3' : ''}`}>
-          <Link to="/write">
-            <button className="btn-vintage btn-hero-primary">
-              <Feather size={18} style={{ marginRight: '8px' }} />
-              Start Writing
-            </button>
-          </Link>
+          <button
+            onClick={handleStartWriting}
+            className="btn-vintage btn-hero-primary"
+          >
+            <Feather size={18} style={{ marginRight: '8px' }} />
+            Start Writing
+          </button>
           <Link to="/templates">
             <button className="btn-outline-vintage">
               Browse Templates

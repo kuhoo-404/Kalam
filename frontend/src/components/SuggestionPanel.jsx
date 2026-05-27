@@ -1,24 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Music, ChevronRight, RefreshCw, Hash } from 'lucide-react';
-
-// Mock suggestions — replace with real API calls to your Django backend
-const MOCK_SUGGESTIONS = {
-  synonyms: [
-    { word: 'storm', score: 1.85, reason: 'Common in Misery poetry · Matches negative tone' },
-    { word: 'tempest', score: 1.72, reason: 'Fits thematic context · Poetic register' },
-    { word: 'downpour', score: 1.61, reason: 'Semantically similar · Genre match' },
-    { word: 'drizzle', score: 1.44, reason: 'Common in Misery poetry' },
-    { word: 'clouds', score: 1.38, reason: 'Thematic coherence' },
-  ],
-  rhymes: [
-    { word: 'pain', score: 1.95, reason: 'Rhymes · Common in Misery poetry · Matches negative tone' },
-    { word: 'drain', score: 1.78, reason: 'Rhymes · Fits thematic context' },
-    { word: 'strain', score: 1.65, reason: 'Rhymes · Matches negative tone' },
-    { word: 'disdain', score: 1.52, reason: 'Rhymes · Common in Misery poetry' },
-    { word: 'refrain', score: 1.41, reason: 'Rhymes · Poetic register' },
-  ],
-};
+import { getSuggestions } from '../utilis/api';
 
 const SuggestionCard = ({ suggestion, index, onInsert, accentColor }) => (
   <motion.div
@@ -51,21 +34,21 @@ const SuggestionCard = ({ suggestion, index, onInsert, accentColor }) => (
   </motion.div>
 );
 
-const SuggestionPanel = ({ genre, sentiment }) => {
-  const [activeTab, setActiveTab] = useState('synonyms');
-  const [inputWord, setInputWord] = useState('');
+const SuggestionPanel = ({ genre, sentiment, poemText }) => {
+  const [activeTab, setActiveTab]     = useState('synonyms');
+  const [inputWord, setInputWord]     = useState('');
   const [suggestions, setSuggestions] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading]     = useState(false);
   const [insertedWord, setInsertedWord] = useState(null);
+  const [error, setError]             = useState(null);
 
-  // Derive accent color from genre
   const genreColors = {
-    romantic: '#D4A5A5',
-    misery: '#6B7280',
-    nostalgia: '#C9A66B',
-    hope: '#7B9E6B',
+    romantic:      '#D4A5A5',
+    misery:        '#6B7280',
+    nostalgia:     '#C9A66B',
+    hope:          '#7B9E6B',
     philosophical: '#8B7355',
-    everyday: '#9B8EA0',
+    everyday:      '#9B8EA0',
   };
   const accentColor = genre
     ? genreColors[genre.toLowerCase()] || '#8B7355'
@@ -73,24 +56,34 @@ const SuggestionPanel = ({ genre, sentiment }) => {
 
   const handleFetch = async () => {
     if (!inputWord.trim()) return;
+    if (!poemText || !poemText.trim()) {
+      setError('Write some poem text first so suggestions can match your context!');
+      return;
+    }
+
     setIsLoading(true);
     setSuggestions(null);
+    setError(null);
 
-    // TODO: Replace with real API call
-    // const response = await fetch(`/api/suggest/?word=${inputWord}&genre=${genre}&sentiment=${sentiment}`);
-    // const data = await response.json();
-    // setSuggestions(data);
-
-    // Simulated delay for now
-    await new Promise(r => setTimeout(r, 900));
-    setSuggestions(MOCK_SUGGESTIONS);
-    setIsLoading(false);
+    try {
+      const res = await getSuggestions(inputWord.trim(), poemText.trim());
+      setSuggestions({
+        synonyms: res.data.synonyms || [],
+        rhymes:   res.data.rhymes   || [],
+      });
+    } catch (err) {
+      console.error('Suggestion fetch failed:', err);
+      setError('Could not fetch suggestions. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleInsert = (word) => {
+    // Copy to clipboard
+    navigator.clipboard.writeText(word).catch(() => {});
     setInsertedWord(word);
     setTimeout(() => setInsertedWord(null), 2000);
-    // TODO: Pass word to editor via shared state / callback
   };
 
   const handleKeyDown = (e) => {
@@ -144,11 +137,16 @@ const SuggestionPanel = ({ genre, sentiment }) => {
         </motion.button>
       </div>
 
+      {/* Error message */}
+      {error && (
+        <p style={styles.errorText}>{error}</p>
+      )}
+
       {/* Tabs */}
       <div style={styles.tabs}>
         {[
           { id: 'synonyms', label: 'Synonyms', icon: <Sparkles size={13} /> },
-          { id: 'rhymes', label: 'Rhymes', icon: <Music size={13} /> },
+          { id: 'rhymes',   label: 'Rhymes',   icon: <Music size={13} /> },
         ].map(tab => (
           <button
             key={tab.id}
@@ -156,12 +154,17 @@ const SuggestionPanel = ({ genre, sentiment }) => {
             style={{
               ...styles.tab,
               borderBottom: activeTab === tab.id ? `2px solid ${accentColor}` : '2px solid transparent',
-              color: activeTab === tab.id ? accentColor : 'var(--soft-black)',
+              color:      activeTab === tab.id ? accentColor : 'var(--soft-black)',
               fontWeight: activeTab === tab.id ? 700 : 400,
             }}
           >
             {tab.icon}
             {tab.label}
+            {suggestions && (
+              <span style={{ ...styles.tabCount, background: accentColor + '25', color: accentColor }}>
+                {suggestions[tab.id]?.length || 0}
+              </span>
+            )}
           </button>
         ))}
       </div>
@@ -181,7 +184,7 @@ const SuggestionPanel = ({ genre, sentiment }) => {
                 <div key={i} style={{ ...styles.skeleton, animationDelay: `${i * 0.15}s` }} />
               ))}
             </motion.div>
-          ) : suggestions ? (
+          ) : suggestions && currentSuggestions.length > 0 ? (
             <motion.div key={activeTab}>
               {currentSuggestions.map((s, i) => (
                 <SuggestionCard
@@ -193,6 +196,18 @@ const SuggestionPanel = ({ genre, sentiment }) => {
                 />
               ))}
             </motion.div>
+          ) : suggestions && currentSuggestions.length === 0 ? (
+            <motion.div
+              key="no-results"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              style={styles.emptyState}
+            >
+              <p style={styles.emptyText}>
+                No {activeTab} found for "<strong>{inputWord}</strong>".
+              </p>
+              <p style={styles.emptyHint}>Try a different word.</p>
+            </motion.div>
           ) : (
             <motion.div
               key="empty"
@@ -202,7 +217,8 @@ const SuggestionPanel = ({ genre, sentiment }) => {
             >
               <Sparkles size={32} color={accentColor} style={{ opacity: 0.4, marginBottom: 12 }} />
               <p style={styles.emptyText}>
-                Type a word above and press <strong>Find</strong> to get context-aware suggestions.
+                Type a word above and press <strong>Find</strong> to get
+                context-aware suggestions.
               </p>
               <p style={styles.emptyHint}>
                 Suggestions adapt to your poem's genre and mood.
@@ -226,7 +242,6 @@ const SuggestionPanel = ({ genre, sentiment }) => {
         )}
       </AnimatePresence>
 
-      {/* Spin keyframe */}
       <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
     </div>
   );
@@ -309,6 +324,13 @@ const styles = {
     alignItems: 'center',
     gap: '6px',
   },
+  errorText: {
+    fontFamily: 'var(--font-body)',
+    fontSize: '0.82rem',
+    color: '#C0392B',
+    padding: '8px 20px 0',
+    margin: 0,
+  },
   tabs: {
     display: 'flex',
     padding: '12px 20px 0',
@@ -328,6 +350,12 @@ const styles = {
     justifyContent: 'center',
     gap: '6px',
     transition: 'all 0.2s',
+  },
+  tabCount: {
+    fontSize: '0.72rem',
+    fontWeight: 700,
+    padding: '1px 6px',
+    borderRadius: '10px',
   },
   suggList: {
     padding: '16px 20px 20px',
