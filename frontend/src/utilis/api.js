@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://127.0.0.1:8000',
+  baseURL: 'https://kalam-backend-plyr.onrender.com',
 });
 
 // Auto-attach token to every request
