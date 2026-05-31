@@ -27,7 +27,8 @@ class PoetrySuggestionEngine:
         # Load word embeddings
         # Dynamic path — works from anywhere
         current_dir = os.path.dirname(os.path.abspath(__file__))
-        embeddings_path = os.path.join(current_dir, '..', '..', 'models', 'embeddings', 'poetry_embeddings.kv')
+        models_base = os.environ.get('KALAM_MODELS_PATH', os.path.join(current_dir, '..', '..', 'models'))
+        embeddings_path = os.path.join(models_base, 'embeddings', 'poetry_embeddings.kv')
         print(f"Loading embeddings from {embeddings_path}...")
         self.embeddings = KeyedVectors.load(embeddings_path, mmap='r')
         print(f"✓ Loaded {len(self.embeddings)} word vectors")

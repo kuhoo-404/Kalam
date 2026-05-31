@@ -29,7 +29,8 @@ class CompletePoetryAnalyzer:
         
         # Load genre classifier
         current_dir = Path(__file__).parent
-        model_path = current_dir.parent.parent / "models" / "genre_classifier"
+        models_base = Path(os.environ.get('KALAM_MODELS_PATH', str(current_dir.parent.parent / 'models')))
+        model_path = models_base / "genre_classifier"
         model_path = str(model_path)
         
         print(f"Loading genre classifier from: {model_path}")
