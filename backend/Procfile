@@ -1,0 +1,1 @@
+web: gunicorn poetry_backend.wsgi:application --bind 0.0.0.0:$PORT --preload --timeout 120
