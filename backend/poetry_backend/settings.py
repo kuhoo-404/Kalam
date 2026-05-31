@@ -29,7 +29,7 @@ INSTALLED_APPS = [
 
     # Local apps
     'api',
-    'ml_integration',
+    'ml_integration.apps.MlIntegrationConfig',
 ]
 
 MIDDLEWARE = [
